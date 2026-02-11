@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>San Valentín</title>
+  <style>
+    :root { --cardW: min(520px, 92vw); }
+    body{
+      margin:0; height:100vh; display:grid; place-items:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, #ffe6f0, #fff);
+      overflow:hidden;
+    }
+    .card{
+      width: var(--cardW);
+      background:#fff;
+      border-radius: 22px;
+      padding: 28px 22px;
+      box-shadow: 0 18px 40px rgba(0,0,0,.12);
+      text-align:center;
+      position: relative;
+      z-index: 2;
+    }
+    h1{ margin:0 0 18px; font-size: 28px; }
+    .subtitle{ margin-top: -6px; opacity: .7; font-size: 14px; }
+
+    #musicPhoto{
+      width: 110px; height: 110px; border-radius: 18px;
+      object-fit: cover; display:block; margin:0 auto 14px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.15);
+    }
+    #topPhoto{
+      width: 110px; height: 110px; border-radius: 18px;
+      object-fit: cover; display:block; margin:0 auto 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+
+    .btns{
+      margin-top: 18px; display:flex; gap: 14px; justify-content:center;
+      position: relative; height: 70px;
+    }
+
+    button{
+      border:0; padding: 14px 18px; border-radius: 14px;
+      font-size: 18px; cursor:pointer; transition: transform .15s ease;
+      user-select:none;
+    }
+    button:active{ transform: scale(.98); }
+
+    .primary{
+      background:#ff3b7a; color:#fff; font-weight:800; min-width: 220px;
+    }
+
+    #yes{
+      background:#ff3b7a; color:#fff; font-weight:700;
+      width: 110px; z-index: 2;
+    }
+
+    #no{
+      background:#f2f2f2; color:#333; font-weight:600;
+      width: 110px; position:absolute; top: 0;
+      left: calc(50% + 70px); z-index: 10;
+    }
+
+    .hidden{ display:none; }
+
+    .overlay{
+      position:fixed; inset:0; background: rgba(0,0,0,.45);
+      display:none; align-items:center; justify-content:center;
+      padding: 18px; z-index: 5;
+    }
+    .modal{
+      background:#fff; border-radius: 18px; padding: 22px 18px;
+      width: min(420px, 92vw); text-align:center;
+      box-shadow: 0 18px 40px rgba(0,0,0,.25);
+    }
+    .modal p{ margin: 10px 0 18px; font-size: 18px; }
+    .close{
+      background:#111; color:#fff; font-weight:700;
+      padding: 12px 16px; border-radius: 12px;
+    }
+
+    #hearts{ position: fixed; inset: 0; pointer-events:none; overflow:hidden; z-index:1; }
+    .floating-heart{
+      position:absolute; bottom:-40px; font-size:22px;
+      will-change: transform, opacity; opacity:.95;
+      animation: floatUp linear forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.15));
+    }
+    @keyframes floatUp{
+      0%{ transform: translateY(0) translateX(0) scale(1); opacity:0; }
+      10%{ opacity:.95; }
+      100%{ transform: translateY(-120vh) translateX(var(--drift)) scale(var(--scale)); opacity:0; }
+    }
+  </style>
+</head>
+<body>
+  <div id="hearts"></div>
+
+  <div class="card">
+    <div id="screenMusic">
+      <img id="musicPhoto" src="https://i.postimg.cc/RVXCCCGx/dragoncito-tierno.png" alt="music photo">
+      <h1>Antes… pongamos nuestra música 🎶</h1>
+      <div class="subtitle">Se abrirá en otra pestaña</div>
+      <div style="margin-top:18px;">
+        <button class="primary" id="playMusic">Reproducir nuestra música 🎶</button>
+      </div>
+    </div>
+
+    <div id="screenQuestion" class="hidden">
+      <img id="topPhoto" src="https://i.postimg.cc/tgb604gC/dragoncito.png" alt="photo"/>
+      <h1>¿Quieres ser mi San Valentín?</h1>
+      <div class="btns" id="arena">
+        <button id="yes">Sí</button>
+        <button id="no">No</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Mensaje">
+      <div style="font-size:42px;">🥰</div>
+      <p>Ya sabía que dirías que sí, amor.</p>
+      <button class="close" id="close">Cerrar</button>
+    </div>
+  </div>
+
+  <script>
+    const YOUTUBE_URL = "https://www.youtube.com/watch?v=w8l33K5D5CI";
+
+    const playMusicBtn = document.getElementById('playMusic');
+    const screenMusic = document.getElementById('screenMusic');
+    const screenQuestion = document.getElementById('screenQuestion');
+
+    const yes = document.getElementById('yes');
+    const no = document.getElementById('no');
+    const overlay = document.getElementById('overlay');
+    const closeBtn = document.getElementById('close');
+    const arena = document.getElementById('arena');
+    const heartsLayer = document.getElementById('hearts');
+
+    let heartsInterval = null;
+
+    function spawnHeart(){
+      const heart = document.createElement('div');
+      heart.className = 'floating-heart';
+      heart.textContent = Math.random() < 0.55 ? '💖' : (Math.random() < 0.5 ? '💘' : '💗');
+
+      const x = Math.random() * 100;
+      const duration = 2.4 + Math.random() * 2.6;
+      const drift = (Math.random() * 120 - 60).toFixed(0) + 'px';
+      const scale = (0.8 + Math.random() * 1.2).toFixed(2);
+
+      heart.style.left = x + 'vw';
+      heart.style.animationDuration = duration + 's';
+      heart.style.setProperty('--drift', drift);
+      heart.style.setProperty('--scale', scale);
+
+      heartsLayer.appendChild(heart);
+      heart.addEventListener('animationend', () => heart.remove());
+    }
+
+    function startHearts(){
+      if (heartsInterval) return;
+      for (let i = 0; i < 14; i++) setTimeout(spawnHeart, i * 70);
+      heartsInterval = setInterval(() => {
+        const n = 2 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < n; i++) spawnHeart();
+      }, 220);
+    }
+
+    function stopHearts(){
+      clearInterval(heartsInterval);
+      heartsInterval = null;
+    }
+
+    function moveNoButton(){
+      const arenaRect = arena.getBoundingClientRect();
+      const noRect = no.getBoundingClientRect();
+
+      const maxX = Math.max(0, arenaRect.width - noRect.width);
+      const maxY = Math.max(0, arenaRect.height - noRect.height);
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      no.style.left = `${x}px`;
+      no.style.top = `${y}px`;
+    }
+
+    playMusicBtn.addEventListener('click', () => {
+      window.open(YOUTUBE_URL, '_blank', 'noopener,noreferrer');
+      screenMusic.classList.add('hidden');
+      screenQuestion.classList.remove('hidden');
+
+      requestAnimationFrame(() => {
+        no.style.left = 'calc(50% + 70px)';
+        no.style.top = '0px';
+      });
+    });
+
+    yes.addEventListener('click', () => {
+      overlay.style.display = 'flex';
+      overlay.setAttribute('aria-hidden', 'false');
+      startHearts();
+    });
+
+    closeBtn.addEventListener('click', () => {
+      overlay.style.display = 'none';
+      overlay.setAttribute('aria-hidden', 'true');
+      stopHearts();
+    });
+
+    no.addEventListener('pointerenter', moveNoButton);
+    no.addEventListener('mousedown', (e) => { e.preventDefault(); moveNoButton(); });
+    no.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, { passive:false });
+
+    arena.addEventListener('mousemove', (e) => {
+      const r = no.getBoundingClientRect();
+      const near = (
+        e.clientX > r.left - 40 && e.clientX < r.right + 40 &&
+        e.clientY > r.top - 40 && e.clientY < r.bottom + 40
+      );
+      if (near) moveNoButton();
+    });
+  </script>
+</body>
+</html>
