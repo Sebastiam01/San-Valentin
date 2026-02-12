@@ -18,6 +18,9 @@
       overflow:hidden;
     }
 
+    /* =========================
+       Collage (Pantalla 1 y 3)
+    ========================= */
     .photoWallScreen{
       position: fixed;
       inset: 0;
@@ -29,6 +32,7 @@
       z-index: 0;
       opacity: .55;
       pointer-events: none;
+      overflow: hidden;
     }
     .photoWallScreen img{
       width: 100%;
@@ -39,6 +43,9 @@
       box-shadow: 0 12px 28px rgba(0,0,0,.12);
     }
 
+    /* =========================
+       Corazoncitos (popup)
+    ========================= */
     #hearts{
       position: fixed;
       inset: 0;
@@ -61,9 +68,12 @@
       100%{ transform: translateY(-120vh) translateX(var(--drift)) scale(var(--scale)); opacity:0; }
     }
 
+    /* =========================
+       Stage + Screens
+    ========================= */
     .stage{
       width: var(--cardW);
-      height: 420px;
+      height: 480px; /* un poco más alto para que nunca se salgan cupones */
       position: relative;
       z-index: 2;
     }
@@ -87,7 +97,7 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,.25);
       box-shadow: 0 18px 40px rgba(0,0,0,.12);
-      padding: 26px 22px;
+      padding: 22px 18px; /* ✅ menos padding para más espacio */
       text-align:center;
     }
 
@@ -150,6 +160,9 @@
       z-index: 10;
     }
 
+    /* =========================
+       Modal
+    ========================= */
     .overlay{
       position:fixed;
       inset:0;
@@ -177,6 +190,9 @@
       border-radius: 12px;
     }
 
+    /* =========================
+       Intro (pantalla 0)
+    ========================= */
     #introCanvas{
       width: 100vw;
       height: 100vh;
@@ -204,21 +220,27 @@
       font-weight: 800;
     }
 
+    /* =========================
+       Pantalla 3 (regalos)
+    ========================= */
     .giftsWrap{
       display:flex;
       flex-direction: column;
       align-items:center;
-      gap: 12px;
+      gap: 10px;
     }
     .timerTitle{
-      font-size: 28px;
+      font-size: 26px;
       margin: 0;
+    }
+    .timerSerif{
+      fonti: 0;
     }
     .timerSerif{
       font-family: "Times New Roman", Times, serif;
       font-variant: small-caps;
-      line-height: 2;
-      font-size: 20px;
+      line-height: 1.7;
+      font-size: 18px;
       font-weight: 700;
       margin: 0;
     }
@@ -227,15 +249,16 @@
       width: 100%;
       display:flex;
       flex-direction: column;
-      gap: 14px;
-      margin-top: 6px;
+      gap: 12px;
+      margin-top: 4px;
     }
+
     .coupon{
       width: 100%;
       background: rgba(255,255,255,.72);
       border: 2px dashed rgba(255,59,122,.55);
-      border-radius: 18px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 10px 12px; /* ✅ más pequeño */
       text-align: center;
       box-shadow: 0 10px 24px rgba(0,0,0,.08);
       position: relative;
@@ -246,32 +269,34 @@
       color:#ff3b7a;
       font-weight: 900;
       letter-spacing: .6px;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      font-size: 12px;
     }
     .coupon b{
       display:block;
-      font-size: 20px;
+      font-size: 17px; /* ✅ más pequeño */
       color:#111;
     }
     .coupon:before, .coupon:after{
       content:"";
       position:absolute;
       top:50%;
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       background: rgba(255,59,122,.18);
       border-radius: 999px;
       transform: translateY(-50%);
     }
-    .coupon:before{ left: -9px; }
-    .coupon:after{ right: -9px; }
+    .coupon:before{ left: -8px; }
+    .coupon:after{ right: -8px; }
   </style>
 </head>
 
 <body>
   <div id="hearts"></div>
 
-  <div id="musicWall" class="photoWallScreen">
+  <!-- Collage SOLO Pantalla 1 (8 fotos) -->
+  <div id="wallMusic" class="photoWallScreen hidden">
     <img src="otos/foto1.jpeg" alt="">
     <img src="otos/foto2.jpeg" alt="">
     <img src="otos/foto3.jpeg" alt="">
@@ -280,6 +305,10 @@
     <img src="otos/foto6.jpeg" alt="">
     <img src="otos/foto7.jpeg" alt="">
     <img src="otos/foto8.jpeg" alt="">
+  </div>
+
+  <!-- Collage SOLO Pantalla 3 (otras 8 fotos) -->
+  <div id="wallGifts" class="photoWallScreen hidden">
     <img src="otos/foto9.jpeg" alt="">
     <img src="otos/foto10.jpeg" alt="">
     <img src="otos/foto11.jpeg" alt="">
@@ -291,15 +320,16 @@
   </div>
 
   <div class="stage">
+    <!-- Pantalla 0 -->
     <div id="screenIntro" class="screen">
       <canvas id="introCanvas"></canvas>
-
       <div id="introUI" class="introUI">
         <div class="introHeart">❤️</div>
         <div class="introText">San Valentín<br><small>(Haz clic en el corazón)</small></div>
       </div>
     </div>
 
+    <!-- Pantalla 1 -->
     <div id="screenMusic" class="screen hidden">
       <div class="panel">
         <img id="musicPhoto" src="https://i.postimg.cc/RVXCCCGx/dragoncito-tierno.png" alt="music photo">
@@ -311,6 +341,7 @@
       </div>
     </div>
 
+    <!-- Pantalla 2 -->
     <div id="screenQuestion" class="screen hidden">
       <div class="panel">
         <img id="topPhoto" src="https://i.postimg.cc/tgb604gC/dragoncito.png" alt="photo"/>
@@ -322,6 +353,7 @@
       </div>
     </div>
 
+    <!-- Pantalla 3 -->
     <div id="screenGifts" class="screen hidden">
       <div class="panel">
         <div class="giftsWrap">
@@ -344,6 +376,7 @@
     </div>
   </div>
 
+  <!-- Modal -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Mensaje">
       <div style="font-size:42px;">🥰</div>
@@ -356,15 +389,15 @@
     const YOUTUBE_URL = "https://www.youtube.com/watch?v=w8l33K5D5CI";
     const LOVE_START = "2025-07-16T00:00:00";
 
-    // ✅ Tu número (Perú) en formato internacional, sin + ni espacios
     const WHATSAPP_PHONE = "51" + "941761696";
+
+    const wallMusic      = document.getElementById('wallMusic');
+    const wallGifts      = document.getElementById('wallGifts');
 
     const screenIntro    = document.getElementById('screenIntro');
     const screenMusic    = document.getElementById('screenMusic');
     const screenQuestion = document.getElementById('screenQuestion');
     const screenGifts    = document.getElementById('screenGifts');
-
-    const musicWall      = document.getElementById('musicWall');
 
     const playMusicBtn   = document.getElementById('playMusic');
     const yes            = document.getElementById('yes');
@@ -378,8 +411,21 @@
     const couponDinner   = document.getElementById('couponDinner');
     const couponSpa      = document.getElementById('couponSpa');
 
+    function showMusicWall(){
+      wallMusic.classList.remove('hidden');
+      wallGifts.classList.add('hidden');
+    }
+    function showGiftsWall(){
+      wallGifts.classList.remove('hidden');
+      wallMusic.classList.add('hidden');
+    }
+    function hideWalls(){
+      wallMusic.classList.add('hidden');
+      wallGifts.classList.add('hidden');
+    }
+
     /* =========================
-       INTRO (corazón rebota)
+       INTRO (cae recto)
     ========================= */
     const introUI = document.getElementById('introUI');
     const introCanvas = document.getElementById('introCanvas');
@@ -390,14 +436,16 @@
 
     let heartPos = { x: 0, y: 0 };
     let velocity = 0;
-    const gravity = 0.25;
-    const bounce = 0.6;
+
+    const gravity = 0.30;
+    const bounce = 0.60;
     let groundY = 0;
 
     function resizeIntro(){
       introCanvas.width = window.innerWidth;
       introCanvas.height = window.innerHeight;
-      groundY = introCanvas.height - 120;
+      groundY = introCanvas.height - 140;
+
       if (!introStarted){
         heartPos.x = introCanvas.width / 2;
         heartPos.y = introCanvas.height / 2;
@@ -419,7 +467,7 @@
     function goToMusic(){
       screenIntro.classList.add('hidden');
       screenMusic.classList.remove('hidden');
-      if (musicWall) musicWall.style.display = '';
+      showMusicWall(); // ✅ collage de 8 fotos solo en música
     }
 
     function introAnimate(){
@@ -429,17 +477,19 @@
       heartPos.y += velocity;
 
       const s = 22;
+
       if (heartPos.y + s > groundY){
         heartPos.y = groundY - s;
         velocity *= -bounce;
 
         if (!introFinished && Math.abs(velocity) < 1){
           introFinished = true;
-          setTimeout(goToMusic, 400);
+          setTimeout(goToMusic, 350);
           return;
         }
       }
 
+      // ✅ cae recto: x fijo al centro
       drawHeart(heartPos.x, heartPos.y, s, "#ff1744");
 
       if (!introFinished) requestAnimationFrame(introAnimate);
@@ -497,7 +547,7 @@
     }
 
     /* =========================
-       Botón NO que se escapa
+       NO que se escapa
     ========================= */
     function moveNoButton(){
       const arenaRect = arena.getBoundingClientRect();
@@ -540,22 +590,28 @@
     }
 
     /* =========================
-       WhatsApp (con número)
+       WhatsApp
     ========================= */
     function openWhatsAppToPhone(message){
-      // wa.me requiere formato internacional (51 + 9 dígitos)
       const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function makePressable(el, fn){
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); }
+      });
     }
 
     /* =========================
        FLUJO
     ========================= */
     resizeIntro();
-    if (musicWall) musicWall.style.display = 'none';
+    hideWalls(); // al inicio no hay collage
 
     introUI.addEventListener('click', startIntro);
 
+    // Pantalla 1 -> Pantalla 2
     playMusicBtn.addEventListener('click', () => {
       window.open(YOUTUBE_URL, '_blank', 'noopener,noreferrer');
 
@@ -563,7 +619,7 @@
       screenGifts.classList.add('hidden');
       screenQuestion.classList.remove('hidden');
 
-      if (musicWall) musicWall.style.display = 'none';
+      hideWalls(); // pantalla 2 sin collage
 
       requestAnimationFrame(() => {
         no.style.left = 'calc(50% + 70px)';
@@ -571,12 +627,14 @@
       });
     });
 
+    // Sí -> Popup
     yes.addEventListener('click', () => {
       overlay.style.display = 'flex';
       overlay.setAttribute('aria-hidden', 'false');
       startHearts();
     });
 
+    // Cerrar popup -> Pantalla 3
     closeBtn.addEventListener('click', () => {
       overlay.style.display = 'none';
       overlay.setAttribute('aria-hidden', 'true');
@@ -585,9 +643,11 @@
       screenQuestion.classList.add('hidden');
       screenGifts.classList.remove('hidden');
 
+      showGiftsWall();     // ✅ collage de las otras 8 fotos
       startLoveTimer();
     });
 
+    // Evitar click NO
     no.addEventListener('pointerenter', moveNoButton);
     no.addEventListener('mousedown', (e) => { e.preventDefault(); moveNoButton(); });
     no.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, { passive:false });
@@ -601,20 +661,16 @@
       if (near) moveNoButton();
     });
 
+    // Cupones -> WhatsApp
     couponDinner.addEventListener('click', () => {
-      openWhatsAppToPhone("Acepto hacer la cena juntos my loft");
+      openWhatsAppToPhone("Acepto hacer la cena juntos 🍝❤️");
     });
     couponSpa.addEventListener('click', () => {
-      openWhatsAppToPhone("¡Iremos al spa chikibeibi");
+      openWhatsAppToPhone("¡Iremos al spa! 🧖‍♀️✨");
     });
 
-    function makePressable(el, fn){
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fn(); }
-      });
-    }
-    makePressable(couponDinner, () => openWhatsAppToPhone("Acepto hacer la cena juntos my loft"));
-    makePressable(couponSpa, () => openWhatsAppToPhone("¡Iremos al spa chikibeibi!"));
+    makePressable(couponDinner, () => openWhatsAppToPhone("Acepto hacer la cena juntos 🍝❤️"));
+    makePressable(couponSpa, () => openWhatsAppToPhone("¡Iremos al spa! 🧖‍♀️✨"));
   </script>
 </body>
 </html>
