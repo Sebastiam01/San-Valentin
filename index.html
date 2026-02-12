@@ -93,7 +93,7 @@
     .panel{
       width: var(--cardW);
       border-radius: 22px;
-      background: rgba(255,255,255,.12);
+      background: rgba(255,255,255,.78);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255,255,255,.25);
       box-shadow: 0 18px 40px rgba(0,0,0,.12);
@@ -244,51 +244,57 @@
       font-weight: 700;
       margin: 0;
     }
+.coupons{
+  width: 100%;
+  max-width: 420px;      /* ✅ evita que crezcan demasiado */
+  margin: 8px auto 0;
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-    .coupons{
-      width: 100%;
-      display:flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 4px;
-    }
+.coupon{
+  width: 100%;
+  box-sizing: border-box; /* ✅ clave para que no se salga */
+  background: rgba(255,255,255,.92);
+  border: 2px dashed rgba(255,59,122,.55);
+  border-radius: 14px;
+  padding: 10px 12px;     /* ✅ más pequeño */
+  text-align: center;
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+  position: relative;
+  cursor: pointer;
+}
 
-    .coupon{
-      width: 100%;
-      background: rgba(255,255,255,.72);
-      border: 2px dashed rgba(255,59,122,.55);
-      border-radius: 16px;
-      padding: 10px 12px; /* ✅ más pequeño */
-      text-align: center;
-      box-shadow: 0 10px 24px rgba(0,0,0,.08);
-      position: relative;
-      cursor: pointer;
-    }
-    .coupon small{
-      display:block;
-      color:#ff3b7a;
-      font-weight: 900;
-      letter-spacing: .6px;
-      margin-bottom: 4px;
-      font-size: 12px;
-    }
-    .coupon b{
-      display:block;
-      font-size: 17px; /* ✅ más pequeño */
-      color:#111;
-    }
-    .coupon:before, .coupon:after{
-      content:"";
-      position:absolute;
-      top:50%;
-      width: 16px;
-      height: 16px;
-      background: rgba(255,59,122,.18);
-      border-radius: 999px;
-      transform: translateY(-50%);
-    }
-    .coupon:before{ left: -8px; }
-    .coupon:after{ right: -8px; }
+.coupon b{
+  display:block;
+  font-size: 16px;        /* ✅ texto más pequeño */
+  color:#111;
+}
+
+.coupon small{
+  display:block;
+  color:#ff3b7a;
+  font-weight: 900;
+  letter-spacing: .6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+/* ✅ “cortes” laterales más pequeños para que NO se salgan */
+.coupon:before, .coupon:after{
+  content:"";
+  position:absolute;
+  top:50%;
+  width: 12px;
+  height: 12px;
+  background: rgba(255,59,122,.18);
+  border-radius: 999px;
+  transform: translateY(-50%);
+}
+.coupon:before{ left: -6px; }
+.coupon:after{ right: -6px; }
+
   </style>
 </head>
 
