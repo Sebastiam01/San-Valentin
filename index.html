@@ -29,7 +29,7 @@
       padding: 6px;
       z-index: 0;
       opacity: .55;
-      pointer-events: none; /* no bloquea clicks */
+      pointer-events: none;
     }
     .photoWallScreen img{
       width: 100%;
@@ -40,16 +40,16 @@
       box-shadow: 0 12px 28px rgba(0,0,0,.12);
     }
 
-    /* Contenedor de pantallas (sin “bloque extra”) */
+    /* Contenedor de pantallas */
     .card{
       width: var(--cardW);
-      height: 360px;             /* ajusta si quieres: 380/420 */
+      height: 430px; /* un poco más por pantalla cupones */
       position: relative;
       z-index: 2;
     }
 
     /* Pantallas superpuestas */
-    #screenMusic, #screenQuestion{
+    #screenMusic, #screenQuestion, #screenGifts{
       position: absolute;
       inset: 0;
       display: grid;
@@ -57,14 +57,12 @@
       transition: opacity .25s ease;
     }
 
-    /* ✅ ocultar sin mezclar pantallas */
     .hidden{
       opacity: 0;
       pointer-events: none;
       visibility: hidden;
     }
 
-    /* Bloque único transparente */
     .panel{
       width: var(--cardW);
       border-radius: 22px;
@@ -76,8 +74,8 @@
       text-align:center;
     }
 
-    h1{ margin:0 0 18px; font-size: 28px; }
-    .subtitle{ margin-top: -6px; opacity: .7; font-size: 14px; }
+    h1{ margin:0 0 12px; font-size: 28px; }
+    .subtitle{ margin-top: 0; opacity: .75; font-size: 14px; }
 
     #musicPhoto, #topPhoto{
       width: 110px;
@@ -186,30 +184,89 @@
       10%{ opacity:.95; }
       100%{ transform: translateY(-120vh) translateX(var(--drift)) scale(var(--scale)); opacity:0; }
     }
+
+    /* Pantalla cupones */
+    .giftsTitle{ font-size: 30px; margin-bottom: 8px; }
+
+    /* ✅ SOLO el contador con serif (como pediste) */
+    #loveTimer.serifCaps{
+      font-family: "Times New Roman", Times, serif;
+      font-variant: small-caps;
+      line-height: 2;
+      font-size: 18px;
+      font-weight: 400;
+      margin: 6px 0 18px;
+    }
+
+    .coupons{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    /* Cupón como botón */
+    .coupon{
+      background: rgba(255,255,255,.55);
+      border: 2px dashed rgba(255,59,122,.65);
+      border-radius: 18px;
+      padding: 16px 14px;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      cursor: pointer;
+    }
+    .coupon::before, .coupon::after{
+      content:"";
+      position:absolute;
+      top: 50%;
+      width: 18px; height: 18px;
+      background: rgba(255,230,240,.95);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+    .coupon::before{ left: -9px; }
+    .coupon::after{ right: -9px; }
+
+    .couponSmall{
+      color:#ff3b7a;
+      font-weight: 900;
+      letter-spacing: .4px;
+      margin-bottom: 6px;
+    }
+    .couponBig{
+      font-size: 20px;
+      font-weight: 900;
+      color:#111;
+    }
+
+    @media (min-width: 520px){
+      .coupons{ grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 
 <body>
   <div id="hearts"></div>
 
-  <!-- Collage fullscreen SOLO música (cambia URLs por sus fotos) -->
+  <!-- Collage fullscreen SOLO música -->
   <div id="musicWall" class="photoWallScreen">
     <img src="otos/foto1.jpeg" alt="">
     <img src="otos/foto2.jpeg" alt="">
     <img src="otos/foto3.jpeg" alt="">
-    <img src="otos/foto4.jpeg" alt="">    
+    <img src="otos/foto4.jpeg" alt="">
     <img src="otos/foto5.jpeg" alt="">
-    <img src="otos/foto6.jpeg" alt="">    
-    <img src="otos/foto7.jpeg" alt="">    
-    <img src="otos/foto8.jpeg" alt="">    
-    <img src="otos/foto9.jpeg" alt="">    
-    <img src="otos/foto10.jpeg" alt="">    
+    <img src="otos/foto6.jpeg" alt="">
+    <img src="otos/foto7.jpeg" alt="">
+    <img src="otos/foto8.jpeg" alt="">
+    <img src="otos/foto9.jpeg" alt="">
+    <img src="otos/foto10.jpeg" alt="">
     <img src="otos/foto11.jpeg" alt="">
     <img src="otos/foto12.jpeg" alt="">
     <img src="otos/foto13.jpeg" alt="">
     <img src="otos/foto14.jpeg" alt="">
     <img src="otos/foto15.jpeg" alt="">
-    <img src="otos/foto16.jpeg" alt=""> 
+    <img src="otos/foto16.jpeg" alt="">
   </div>
 
   <div class="card">
@@ -236,22 +293,50 @@
         </div>
       </div>
     </div>
+
+    <!-- Pantalla 3 -->
+    <div id="screenGifts" class="hidden">
+      <div class="panel">
+        <h1 class="giftsTitle">Mi amor por ti comenzó hace...</h1>
+        <div id="loveTimer" class="serifCaps">0 días 00 horas 00 minutos 00 segundos</div>
+
+        <div class="coupons">
+          <button class="coupon" id="couponDinner" type="button">
+            <div class="couponSmall">Cupón</div>
+            <div class="couponBig">Para hacer la cena juntos</div>
+          </button>
+
+          <button class="coupon" id="couponSpa" type="button">
+            <div class="couponSmall">Cupón</div>
+            <div class="couponBig">Día de spa</div>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- Popup -->
   <div class="overlay" id="overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-label="Mensaje">
       <div style="font-size:42px;">🥰</div>
       <p>Ya sabía que dirías que sí, amor.</p>
-      <button class="close" id="close">Cerrar</button>
+      <button class="close" id="close" type="button">Cerrar</button>
     </div>
   </div>
 
   <script>
     const YOUTUBE_URL = "https://www.youtube.com/watch?v=w8l33K5D5CI";
 
+    // ✅ Inicio real: 16/jul/2025 (Perú UTC-5)
+    const LOVE_START = "2025-07-16T00:00:00-05:00";
+
+    // ✅ WhatsApp (Perú: 51). Sin +, sin espacios.
+    const WHATSAPP_NUMBER = "519XXXXXXXX"; // <-- CAMBIA ESTO
+
     const playMusicBtn = document.getElementById('playMusic');
     const screenMusic = document.getElementById('screenMusic');
     const screenQuestion = document.getElementById('screenQuestion');
+    const screenGifts = document.getElementById('screenGifts');
     const musicWall = document.getElementById('musicWall');
 
     const yes = document.getElementById('yes');
@@ -261,9 +346,14 @@
     const arena = document.getElementById('arena');
     const heartsLayer = document.getElementById('hearts');
 
-    // ---- Corazoncitos ----
+    const loveTimerEl = document.getElementById('loveTimer');
+    const couponDinner = document.getElementById('couponDinner');
+    const couponSpa = document.getElementById('couponSpa');
+
+    let loveInterval = null;
     let heartsInterval = null;
 
+    // ---- Corazoncitos ----
     function spawnHeart(){
       const heart = document.createElement('div');
       heart.className = 'floating-heart';
@@ -298,7 +388,7 @@
       heartsInterval = null;
     }
 
-    // ---- Mover el botón No ----
+    // ---- Mover botón No ----
     function moveNoButton(){
       const arenaRect = arena.getBoundingClientRect();
       const noRect = no.getBoundingClientRect();
@@ -313,11 +403,49 @@
       no.style.top = `${y}px`;
     }
 
+    // ---- Timer amor ----
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function updateLoveTimer(){
+      const start = new Date(LOVE_START).getTime();
+      const now = Date.now();
+      let diff = Math.max(0, now - start);
+
+      const sec = Math.floor(diff / 1000);
+      const days = Math.floor(sec / 86400);
+      const hours = Math.floor((sec % 86400) / 3600);
+      const mins = Math.floor((sec % 3600) / 60);
+      const secs = sec % 60;
+
+      loveTimerEl.textContent = `${days} días ${pad(hours)} horas ${pad(mins)} minutos ${pad(secs)} segundos`;
+    }
+
+    function startLoveTimer(){
+      if (loveInterval) return;
+      updateLoveTimer();
+      loveInterval = setInterval(updateLoveTimer, 1000);
+    }
+
+    // ---- WhatsApp ----
+    function openWhatsApp(message){
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    couponDinner.addEventListener("click", () => {
+      openWhatsApp("Acepto hacer la cena juntos 🍽️❤️");
+    });
+
+    couponSpa.addEventListener("click", () => {
+      openWhatsApp("¡Iremos al spaa! 🧖‍♀️💆‍♂️✨");
+    });
+
     // ---- Música -> Pregunta ----
     playMusicBtn.addEventListener('click', () => {
       window.open(YOUTUBE_URL, '_blank', 'noopener,noreferrer');
 
       screenMusic.classList.add('hidden');
+      screenGifts.classList.add('hidden');
       screenQuestion.classList.remove('hidden');
 
       if (musicWall) musicWall.style.display = 'none';
@@ -335,10 +463,16 @@
       startHearts();
     });
 
+    // ---- Cerrar popup -> Pantalla 3 ----
     closeBtn.addEventListener('click', () => {
       overlay.style.display = 'none';
       overlay.setAttribute('aria-hidden', 'true');
       stopHearts();
+
+      screenQuestion.classList.add('hidden');
+      screenGifts.classList.remove('hidden');
+
+      startLoveTimer();
     });
 
     // ---- Evitar click en No ----
